@@ -32,6 +32,9 @@ header nav a:hover {
     background: white;
     border-radius: 20px;
 }
+.box-1 {
+    text-align: center;
+}
 
 /* Các khối Anime */
 .box-2 {
