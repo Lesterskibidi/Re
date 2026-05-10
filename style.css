@@ -24,6 +24,10 @@ header nav a:hover {
 }
 body {
     background-color: lightblue;
+    text-align: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding-bottom: 100px;
 }
 .box-1 {
     text-align: center;
@@ -31,4 +35,47 @@ body {
 h1 {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 50px;   
+}
+.box-2 {
+    display: flex;
+    height: auto;
+    width: 90%;
+    border-radius: 20px;
+    padding: 20px;
+    font-size: 28px;
+    margin-left: auto;
+    margin-right: auto;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 50px
+}
+.box-2 h2 {
+    background-color: blueviolet;
+    border-radius: 20px;
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+.box-2 img {
+    display: block;
+    margin-left: 0;
+    margin-right: auto;
+    margin-top: 10px;
+}
+.box-2 p {
+    flex: 1;
+    display: block;
+    line-height: 1.6;
+    text-align: justify;
+    margin-right: 0;
+    font-size: 18px;
+}
+footer {
+    background-color: black;
+    height: auto;
+    border-radius: 20px;
+    color: white;
+    width: 100px;
+    margin-left: auto;
+    margin-right: auto;
 }
