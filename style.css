@@ -1,0 +1,97 @@
+/* Tổng thể trang */
+body {
+    background-color: lightblue;
+    margin: 0;
+    min-height: 100vh;
+    padding-bottom: 50px;
+    font-family: sans-serif;
+    text-align: center;
+}
+
+/* Header cho đẹp hơn */
+header {
+    background-color: lightgrey;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    height: 100px;
+    align-items: center;
+    border-radius: 0 0 40px 40px; /* Chỉ bo góc dưới */
+    justify-content: center;
+    gap: 20px;
+}
+
+header nav a {
+    text-decoration: none;
+    color: black;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 10px 20px;
+    transition: 0.3s;
+}
+
+header nav a:hover {
+    background: white;
+    border-radius: 20px;
+}
+.box-1 {
+    text-align: center;
+}
+
+/* Các khối Anime */
+.box-2 {
+    display: block; /* Đổi flex thành block để h2 nằm trên cùng */
+    width: 90%;
+    max-width: 1200px; /* Giới hạn độ rộng để không bị loãng */
+    margin: 40px auto;
+    padding: 30px;
+    height: auto; /* Tự dài ra theo chữ */
+    background: rgba(255, 255, 255, 0.2); /* Thêm nền mờ cho sang */
+    border-radius: 20px;
+}
+
+.box-2 h2 {
+    text-align: center;
+    padding: 15px;
+    border-radius: 50px;
+    width: 60%;
+    margin: 0 auto 30px auto;
+    font-size: 35px;
+}
+
+/* Cấu trúc chia đôi Hình và Chữ */
+.content-box {
+    display: flex; 
+    gap: 40px;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.box-2 img {
+    width: 250px; /* Cố định chiều rộng hình */
+    height: auto; /* Chiều cao tự nhảy theo tỉ lệ */
+    border-radius: 15px;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.2);
+    flex-shrink: 0;
+}
+
+.text-side {
+    flex: 1; /* Chiếm hết phần còn lại */
+}
+
+.box-2 p {
+    line-height: 1.8;
+    text-align: justify;
+    font-size: 18px;
+    margin: 0 0 15px 0;
+    color: #333;
+}
+
+/* Footer cho cân đối */
+footer {
+    background-color: black;
+    color: white;
+    width: fit-content;
+    padding: 10px 40px;
+    margin: 50px auto;
+    border-radius: 30px;
+}
