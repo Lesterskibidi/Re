@@ -1,0 +1,997 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quan ly danh muc</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --ink: #172033;
+      --muted: #647086;
+      --line: #d9e0ea;
+      --accent: #0f766e;
+      --accent-strong: #0b5f59;
+      --danger: #b42318;
+      --danger-bg: #fff0ed;
+      --gain: #047857;
+      --loss: #c2410c;
+      --soft: #edf6f5;
+      --shadow: 0 18px 45px rgba(23, 32, 51, 0.08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background:
+        linear-gradient(180deg, rgba(15, 118, 110, 0.08), transparent 360px),
+        var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 38px;
+    }
+
+    header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: clamp(28px, 4vw, 46px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .subhead {
+      margin: 0;
+      color: var(--muted);
+      max-width: 620px;
+      line-height: 1.55;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: white;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      background: var(--accent-strong);
+    }
+
+    .btn.secondary {
+      background: var(--panel);
+      color: var(--ink);
+      border: 1px solid var(--line);
+    }
+
+    .btn.secondary:hover {
+      background: #f8fafc;
+      border-color: #bac5d4;
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.62;
+      transform: none;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      min-height: 116px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .metric strong {
+      display: block;
+      margin-top: 10px;
+      font-size: clamp(22px, 3vw, 30px);
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+    }
+
+    .metric small {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .form-panel {
+      padding: 18px;
+      position: sticky;
+      top: 18px;
+    }
+
+    .panel-title {
+      margin: 0 0 14px;
+      font-size: 18px;
+    }
+
+    form {
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input, select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      min-height: 42px;
+      padding: 9px 11px;
+      color: var(--ink);
+      background: white;
+      outline: none;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+    }
+
+    .two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .form-actions {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .hint {
+      margin: 13px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .table-panel {
+      overflow: hidden;
+    }
+
+    .table-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .table-head h2 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .search {
+      max-width: 240px;
+      min-height: 38px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 850px;
+    }
+
+    th, td {
+      padding: 13px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    th:first-child, td:first-child,
+    th:nth-child(2), td:nth-child(2) {
+      text-align: left;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: #f8fafc;
+    }
+
+    tbody tr:hover {
+      background: var(--soft);
+    }
+
+    .symbol {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 58px;
+      min-height: 32px;
+      padding: 0 10px;
+      border-radius: 8px;
+      background: #e6f4f1;
+      color: var(--accent-strong);
+      font-weight: 800;
+      letter-spacing: 0.03em;
+    }
+
+    .gain {
+      color: var(--gain);
+      font-weight: 800;
+    }
+
+    .loss {
+      color: var(--loss);
+      font-weight: 800;
+    }
+
+    .quote-meta {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      white-space: normal;
+    }
+
+    .quote-error {
+      color: var(--danger);
+    }
+
+    .row-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: white;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      font-weight: 800;
+    }
+
+    .icon-btn:hover {
+      background: #f8fafc;
+    }
+
+    .icon-btn.delete {
+      color: var(--danger);
+      background: var(--danger-bg);
+      border-color: #ffd4cc;
+    }
+
+    .empty {
+      padding: 38px 18px;
+      text-align: center;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      transform: translateX(-50%);
+      background: #172033;
+      color: white;
+      padding: 11px 14px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-4px);
+    }
+
+    @media (max-width: 900px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .toolbar {
+        justify-content: flex-start;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .form-panel {
+        position: static;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .shell {
+        width: min(100% - 20px, 1180px);
+        padding-top: 18px;
+      }
+
+      .grid, .two, .form-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .table-head {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .search {
+        max-width: none;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header>
+      <div>
+        <h1>Quan ly danh muc</h1>
+        <p class="subhead">Theo doi tai san dang nam giu, cap nhat gia tu Binance Spot, tinh lai lo tam tinh va ty trong tung ma.</p>
+      </div>
+      <div class="toolbar">
+        <button class="btn" id="refreshBtn" type="button">Cap nhat gia</button>
+        <button class="btn secondary" id="exportBtn" type="button">Xuat CSV</button>
+        <button class="btn secondary" id="clearBtn" type="button">Xoa tat ca</button>
+      </div>
+    </header>
+
+    <section class="grid" aria-label="Tong quan danh muc">
+      <article class="metric">
+        <span>Tong gia von</span>
+        <strong id="totalCost">0 d</strong>
+        <small>So tien da bo ra</small>
+      </article>
+      <article class="metric">
+        <span>Gia tri hien tai</span>
+        <strong id="totalValue">0 d</strong>
+        <small id="lastUpdate">Chua cap nhat tu thi truong</small>
+      </article>
+      <article class="metric">
+        <span>Lai / lo</span>
+        <strong id="totalProfit">0 d</strong>
+        <small id="totalProfitRate">0%</small>
+      </article>
+      <article class="metric">
+        <span>So ma</span>
+        <strong id="stockCount">0</strong>
+        <small>Trong danh muc</small>
+      </article>
+    </section>
+
+    <section class="workspace">
+      <aside class="panel form-panel">
+        <h2 class="panel-title" id="formTitle">Them tai san</h2>
+        <form id="stockForm">
+          <input type="hidden" id="editingId">
+          <label>
+            Loai tai san
+            <select id="assetType" required>
+              <option value="crypto">Crypto / Binance</option>
+              <option value="stock">Co phieu / Stock</option>
+            </select>
+          </label>
+          <label>
+            Ma tai san / cap giao dich
+            <input id="symbol" autocomplete="off" placeholder="VD: BTC, ETH, BTCUSDT, AAPL" required>
+          </label>
+          <label>
+            Ten ghi nho
+            <input id="name" autocomplete="off" placeholder="VD: Bitcoin, Ethereum">
+          </label>
+          <div class="two">
+            <label>
+              So luong
+              <input id="quantity" type="number" min="0" step="0.000001" placeholder="0.14" required>
+            </label>
+            <label>
+              Gia von / don vi
+              <input id="cost" type="number" min="0" step="0.01" placeholder="85000" required>
+            </label>
+          </div>
+          <div class="two">
+            <label>
+              Don vi tien te
+              <select id="currency" required>
+                <option value="USDT">USDT - Tether</option>
+                <option value="USDC">USDC - USD Coin</option>
+                <option value="FDUSD">FDUSD - First Digital USD</option>
+                <option value="BUSD">BUSD - Binance USD</option>
+                <option value="VND">VND - Viet Nam dong</option>
+                <option value="USD">USD - US dollar</option>
+                <option value="EUR">EUR - Euro</option>
+                <option value="JPY">JPY - Yen Nhat</option>
+                <option value="GBP">GBP - Bang Anh</option>
+                <option value="SGD">SGD - Singapore dollar</option>
+                <option value="HKD">HKD - Hong Kong dollar</option>
+                <option value="AUD">AUD - Australian dollar</option>
+                <option value="CAD">CAD - Canadian dollar</option>
+                <option value="CHF">CHF - Swiss franc</option>
+                <option value="CNY">CNY - Yuan Trung Quoc</option>
+                <option value="KRW">KRW - Won Han Quoc</option>
+                <option value="THB">THB - Baht Thai</option>
+                <option value="BTC">BTC - Bitcoin</option>
+                <option value="ETH">ETH - Ethereum</option>
+                <option value="BNB">BNB - BNB</option>
+              </select>
+            </label>
+            <label>
+              Ngay mua
+              <input id="buyDate" type="date">
+            </label>
+          </div>
+          <div class="form-actions">
+            <button class="btn" type="submit" id="submitBtn">Luu tai san</button>
+            <button class="btn secondary" type="button" id="resetBtn">Moi</button>
+          </div>
+        </form>
+        <p class="hint">Crypto dung Binance, vi du BTC + USDT thanh BTCUSDT. Co phieu dung Stooq, vi du AAPL se thu AAPL.US.</p>
+      </aside>
+
+      <section class="panel table-panel">
+        <div class="table-head">
+          <h2>Danh muc nam giu</h2>
+          <input class="search" id="search" placeholder="Tim ma hoac ten">
+        </div>
+        <div id="emptyState" class="empty">Chua co tai san nao. Hay nhap ma dau tien vao bieu mau ben trai.</div>
+        <div class="table-wrap" id="tableWrap" hidden>
+          <table>
+            <thead>
+              <tr>
+                <th>Ma</th>
+                <th>Ten</th>
+                <th>SL</th>
+                <th>Gia von</th>
+                <th>Gia thi truong</th>
+                <th>Gia tri</th>
+                <th>Lai / lo</th>
+                <th>Ty trong</th>
+                <th>Nguon gia</th>
+                <th>Thao tac</th>
+              </tr>
+            </thead>
+            <tbody id="stockRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const STORAGE_KEY = "my-stock-portfolio-v1";
+    const form = document.querySelector("#stockForm");
+    const fields = {
+      editingId: document.querySelector("#editingId"),
+      assetType: document.querySelector("#assetType"),
+      symbol: document.querySelector("#symbol"),
+      name: document.querySelector("#name"),
+      quantity: document.querySelector("#quantity"),
+      cost: document.querySelector("#cost"),
+      currency: document.querySelector("#currency"),
+      buyDate: document.querySelector("#buyDate")
+    };
+    const rows = document.querySelector("#stockRows");
+    const search = document.querySelector("#search");
+    const emptyState = document.querySelector("#emptyState");
+    const tableWrap = document.querySelector("#tableWrap");
+    const toast = document.querySelector("#toast");
+    const formTitle = document.querySelector("#formTitle");
+    const submitBtn = document.querySelector("#submitBtn");
+    const refreshBtn = document.querySelector("#refreshBtn");
+
+    let stocks = loadStocks();
+
+    const ZERO_DECIMAL_CURRENCIES = new Set(["VND", "JPY", "KRW"]);
+    const FIAT_CURRENCIES = new Set(["VND", "USD", "EUR", "JPY", "GBP", "SGD", "HKD", "AUD", "CAD", "CHF", "CNY", "KRW", "THB", "TRY"]);
+
+    function loadStocks() {
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveStocks() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(stocks));
+    }
+
+    function formatMoney(value, currency = "VND") {
+      const digits = ZERO_DECIMAL_CURRENCIES.has(currency) ? 0 : 2;
+      const safeValue = Number.isFinite(value) ? value : 0;
+      if (!FIAT_CURRENCIES.has(currency)) {
+        return `${new Intl.NumberFormat("vi-VN", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 8
+        }).format(safeValue)} ${currency}`;
+      }
+      return new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency,
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      }).format(safeValue);
+    }
+
+    function formatQuantity(value) {
+      return Number(value).toLocaleString("vi-VN", {
+        maximumFractionDigits: 6
+      });
+    }
+
+    function formatPercent(value) {
+      return `${value >= 0 ? "+" : ""}${value.toFixed(2)}%`;
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 1800);
+    }
+
+    function stockMath(stock) {
+      const costValue = stock.quantity * stock.cost;
+      const currentValue = stock.quantity * marketPrice(stock);
+      const profit = currentValue - costValue;
+      const profitRate = costValue > 0 ? profit / costValue * 100 : 0;
+      return { costValue, currentValue, profit, profitRate };
+    }
+
+    function marketPrice(stock) {
+      return Number.isFinite(Number(stock.price)) && Number(stock.price) > 0 ? Number(stock.price) : Number(stock.cost);
+    }
+
+    function render() {
+      const query = search.value.trim().toLowerCase();
+      const computed = stocks.map((stock) => ({ ...stock, ...stockMath(stock) }));
+      const totals = groupTotalsByCurrency(computed);
+      const totalCost = sumTotals(totals, "costValue");
+      const totalValue = sumTotals(totals, "currentValue");
+      const totalProfit = sumTotals(totals, "profit");
+      const totalProfitRate = totals.length === 1 && totals[0].costValue > 0 ? totals[0].profit / totals[0].costValue * 100 : 0;
+      const visibleStocks = computed.filter((stock) => {
+        return stock.symbol.toLowerCase().includes(query) || stock.name.toLowerCase().includes(query);
+      });
+
+      document.querySelector("#totalCost").innerHTML = formatTotalLines(totals, "costValue");
+      document.querySelector("#totalValue").innerHTML = formatTotalLines(totals, "currentValue");
+      document.querySelector("#totalProfit").innerHTML = formatTotalLines(totals, "profit");
+      document.querySelector("#totalProfit").className = totalProfit >= 0 ? "gain" : "loss";
+      document.querySelector("#totalProfitRate").textContent = totals.length === 1 ? formatPercent(totalProfitRate) : "Theo tung tien te";
+      document.querySelector("#stockCount").textContent = stocks.length;
+      document.querySelector("#lastUpdate").textContent = latestUpdateText(computed);
+
+      emptyState.hidden = stocks.length > 0;
+      tableWrap.hidden = stocks.length === 0;
+
+      rows.innerHTML = visibleStocks.map((stock) => {
+        const currency = stock.currency || "VND";
+        const currencyTotal = totals.find((item) => item.currency === currency)?.currentValue || 0;
+        const weight = currencyTotal > 0 ? stock.currentValue / currencyTotal * 100 : 0;
+        const profitClass = stock.profit >= 0 ? "gain" : "loss";
+        return `
+          <tr>
+            <td><span class="symbol">${escapeHtml(stock.symbol)}</span></td>
+            <td>${escapeHtml(stock.name || "-")}<span class="quote-meta">${stock.assetType === "stock" ? "Stock" : "Crypto"}</span></td>
+            <td>${formatQuantity(stock.quantity)}</td>
+            <td>${formatMoney(stock.cost, currency)}</td>
+            <td>${marketPriceCell(stock)}</td>
+            <td>${formatMoney(stock.currentValue, currency)}</td>
+            <td class="${profitClass}">${formatMoney(stock.profit, currency)}<br><small>${formatPercent(stock.profitRate)}</small></td>
+            <td>${weight.toFixed(2)}%</td>
+            <td>${quoteCell(stock)}</td>
+            <td>
+              <div class="row-actions">
+                <button class="icon-btn" type="button" title="Cap nhat gia" data-action="refresh" data-id="${stock.id}">$</button>
+                <button class="icon-btn" type="button" title="Sua" data-action="edit" data-id="${stock.id}">✎</button>
+                <button class="icon-btn delete" type="button" title="Xoa" data-action="delete" data-id="${stock.id}">×</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      if (stocks.length > 0 && visibleStocks.length === 0) {
+        rows.innerHTML = `<tr><td colspan="10" class="empty">Khong tim thay tai san phu hop.</td></tr>`;
+      }
+    }
+
+    function quoteCell(stock) {
+      if (stock.quoteError) {
+        return `<span class="quote-meta quote-error">${escapeHtml(stock.quoteError)}</span>`;
+      }
+      if (!stock.quoteUpdatedAt) {
+        return `<span class="quote-meta">Nhap tay</span>`;
+      }
+      const date = new Date(stock.quoteUpdatedAt);
+      const time = date.toLocaleString("vi-VN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        day: "2-digit",
+        month: "2-digit"
+      });
+      return `<span>${escapeHtml(stock.marketSymbol || stock.symbol)}</span><span class="quote-meta">${escapeHtml(stock.quoteSource || "Binance Spot")} - ${time}</span>`;
+    }
+
+    function marketPriceCell(stock) {
+      const currency = stock.currency || "VND";
+      if (!stock.quoteUpdatedAt) {
+        return `<span class="quote-meta">Chua cap nhat</span>`;
+      }
+      return formatMoney(marketPrice(stock), currency);
+    }
+
+    function latestUpdateText(items) {
+      const dates = items
+        .map((stock) => stock.quoteUpdatedAt ? new Date(stock.quoteUpdatedAt).getTime() : 0)
+        .filter(Boolean);
+      if (dates.length === 0) return "Chua cap nhat tu thi truong";
+      const latest = new Date(Math.max(...dates));
+      return `Cap nhat gan nhat ${latest.toLocaleString("vi-VN", {
+        hour: "2-digit",
+        minute: "2-digit",
+        day: "2-digit",
+        month: "2-digit"
+      })}`;
+    }
+
+    function groupTotalsByCurrency(items) {
+      const totals = new Map();
+      for (const stock of items) {
+        const currency = stock.currency || "VND";
+        const current = totals.get(currency) || { currency, costValue: 0, currentValue: 0, profit: 0 };
+        current.costValue += stock.costValue;
+        current.currentValue += stock.currentValue;
+        current.profit += stock.profit;
+        totals.set(currency, current);
+      }
+      return Array.from(totals.values()).sort((a, b) => a.currency.localeCompare(b.currency));
+    }
+
+    function sumTotals(totals, key) {
+      return totals.reduce((sum, item) => sum + item[key], 0);
+    }
+
+    function formatTotalLines(totals, key) {
+      if (totals.length === 0) return formatMoney(0);
+      return totals
+        .map((item) => `<span>${formatMoney(item[key], item.currency)}</span>`)
+        .join("<br>");
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[char]));
+    }
+
+    function resetForm() {
+      form.reset();
+      fields.editingId.value = "";
+      formTitle.textContent = "Them tai san";
+      submitBtn.textContent = "Luu tai san";
+      fields.symbol.focus();
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const existing = stocks.find((stock) => stock.id === fields.editingId.value);
+      const item = {
+        id: fields.editingId.value || createId(),
+        assetType: fields.assetType.value,
+        symbol: fields.symbol.value.trim().toUpperCase(),
+        name: fields.name.value.trim(),
+        quantity: Number(fields.quantity.value),
+        cost: Number(fields.cost.value),
+        price: Number(existing?.price || fields.cost.value),
+        currency: fields.currency.value,
+        buyDate: fields.buyDate.value,
+        quoteUpdatedAt: existing?.quoteUpdatedAt || "",
+        quoteError: "",
+        marketSymbol: existing?.marketSymbol || "",
+        quoteSource: existing?.quoteSource || ""
+      };
+
+      if (!item.symbol || item.quantity <= 0 || item.cost < 0 || !item.currency) {
+        showToast("Vui long kiem tra lai du lieu.");
+        return;
+      }
+
+      const index = stocks.findIndex((stock) => stock.id === item.id);
+      if (index >= 0) {
+        stocks[index] = item;
+        showToast("Da cap nhat tai san.");
+      } else {
+        stocks.push(item);
+        showToast("Da them tai san.");
+      }
+
+      saveStocks();
+      resetForm();
+      render();
+    });
+
+    rows.addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+
+      const stock = stocks.find((item) => item.id === button.dataset.id);
+      if (!stock) return;
+
+      if (button.dataset.action === "edit") {
+        fields.editingId.value = stock.id;
+        fields.symbol.value = stock.symbol;
+        fields.assetType.value = stock.assetType || "crypto";
+        fields.name.value = stock.name;
+        fields.quantity.value = stock.quantity;
+        fields.cost.value = stock.cost;
+        fields.currency.value = stock.currency || "VND";
+        fields.buyDate.value = stock.buyDate || "";
+        formTitle.textContent = "Sua tai san";
+        submitBtn.textContent = "Cap nhat";
+        fields.symbol.focus();
+      }
+
+      if (button.dataset.action === "refresh") {
+        refreshPrices([stock.id]);
+      }
+
+      if (button.dataset.action === "delete" && confirm(`Xoa ${stock.symbol} khoi danh muc?`)) {
+        stocks = stocks.filter((item) => item.id !== stock.id);
+        saveStocks();
+        render();
+        showToast("Da xoa tai san.");
+      }
+    });
+
+    document.querySelector("#resetBtn").addEventListener("click", resetForm);
+    search.addEventListener("input", render);
+    refreshBtn.addEventListener("click", () => refreshPrices());
+
+    document.querySelector("#clearBtn").addEventListener("click", () => {
+      if (stocks.length === 0) return;
+      if (confirm("Xoa toan bo danh muc?")) {
+        stocks = [];
+        saveStocks();
+        resetForm();
+        render();
+        showToast("Da xoa danh muc.");
+      }
+    });
+
+    document.querySelector("#exportBtn").addEventListener("click", () => {
+      if (stocks.length === 0) {
+        showToast("Chua co du lieu de xuat.");
+        return;
+      }
+      const header = ["Loai", "Ma", "Ten", "So luong", "Tien te", "Gia von", "Gia thi truong", "Ngay mua", "Gia tri", "Lai lo", "Lai lo %"];
+      const lines = stocks.map((stock) => {
+        const math = stockMath(stock);
+        const currency = stock.currency || "VND";
+        return [
+          stock.assetType || "crypto",
+          stock.symbol,
+          stock.name,
+          stock.quantity,
+          currency,
+          stock.cost,
+          marketPrice(stock),
+          stock.buyDate,
+          math.currentValue,
+          math.profit,
+          math.profitRate.toFixed(2)
+        ].map(csvCell).join(",");
+      });
+      const csv = [header.join(","), ...lines].join("\n");
+      const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "danh-muc-co-phieu.csv";
+      link.click();
+      URL.revokeObjectURL(url);
+      showToast("Da xuat CSV.");
+    });
+
+    function csvCell(value) {
+      const text = String(value ?? "");
+      return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+    }
+
+    async function refreshPrices(ids = stocks.map((stock) => stock.id)) {
+      if (stocks.length === 0) {
+        showToast("Chua co tai san de cap nhat.");
+        return;
+      }
+
+      refreshBtn.disabled = true;
+      refreshBtn.textContent = "Dang cap nhat...";
+      let successCount = 0;
+      let failCount = 0;
+
+      for (const id of ids) {
+        const index = stocks.findIndex((stock) => stock.id === id);
+        if (index < 0) continue;
+
+        try {
+          const quote = await fetchMarketQuote(stocks[index]);
+          stocks[index] = {
+            ...stocks[index],
+            price: quote.price,
+            currency: quote.currency || stocks[index].currency || "VND",
+            name: stocks[index].name || quote.name || stocks[index].symbol,
+            marketSymbol: quote.marketSymbol,
+            quoteSource: quote.source,
+            quoteUpdatedAt: new Date().toISOString(),
+            quoteError: ""
+          };
+          successCount += 1;
+        } catch (error) {
+          stocks[index] = {
+            ...stocks[index],
+            quoteError: error.message || "Khong lay duoc gia"
+          };
+          failCount += 1;
+        }
+
+        saveStocks();
+        render();
+      }
+
+      refreshBtn.disabled = false;
+      refreshBtn.textContent = "Cap nhat gia";
+      const message = failCount > 0
+        ? `Cap nhat ${successCount} ma, loi ${failCount} ma.`
+        : `Da cap nhat ${successCount} ma.`;
+      showToast(message);
+    }
+
+    async function fetchMarketQuote(stock) {
+      const symbol = stock.symbol.trim().toUpperCase();
+      const quote = stock.currency || "USDT";
+      const type = stock.assetType || "crypto";
+      const response = await fetch(`/api/quote?type=${encodeURIComponent(type)}&symbol=${encodeURIComponent(symbol)}&quote=${encodeURIComponent(quote)}`);
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.error || `Binance tra loi ${response.status}`);
+      }
+
+      const price = Number(data.price);
+      if (!Number.isFinite(price) || price <= 0) {
+        throw new Error("Binance chua co gia moi");
+      }
+
+      return {
+        price,
+        currency: data.currency || quote,
+        marketSymbol: data.marketSymbol || symbol,
+        name: data.name || symbol,
+        source: data.source || "Binance Spot"
+      };
+    }
+
+    function createId() {
+      if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+        return crypto.randomUUID();
+      }
+      return `stock-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    }
+
+    render();
+  </script>
+</body>
+</html>
