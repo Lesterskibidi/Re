@@ -1,0 +1,23 @@
+{
+  "name": "portfolio-market-tracker",
+  "version": "1.0.0",
+  "private": false,
+  "description": "Local portfolio tracker for crypto and stocks using Binance and Stooq market data.",
+  "main": "stock-server.js",
+  "scripts": {
+    "start": "node stock-server.js",
+    "check": "node --check stock-server.js"
+  },
+  "keywords": [
+    "portfolio",
+    "stocks",
+    "crypto",
+    "binance",
+    "stooq"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  }
+}
